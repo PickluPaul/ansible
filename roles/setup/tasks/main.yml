@@ -1,0 +1,26 @@
+- name: Create directory
+  file:
+      path: /home/{{ ansible_ssh_user }}/.aws
+      state: directory
+      owner: "{{ ansible_ssh_user }}"
+      group: "{{ ansible_ssh_user }}"
+      mode: 0755
+
+- name: Copy the credentials files
+  copy:
+      src: credentials
+      dest: /home/{{ ansible_ssh_user }}/.aws/credentials
+      owner: "{{ ansible_ssh_user }}"
+      mode: 0600
+
+- name: Install packages
+  package:
+      name: "{{ item }}"
+      state: present
+  with_items:
+      - python-dev 
+      - python-pip
+
+- name: Install Boto3
+  pip:
+      name: boto3
